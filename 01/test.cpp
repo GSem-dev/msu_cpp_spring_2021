@@ -3,30 +3,77 @@
 #include <cstddef>
 #include <cassert>
 
+void DefaultWorkTest()
+{
+    Allocator all;
+    all.makeAllocator(sizeof(char) * 10);
+    assert(all.ptr != nullptr);
+}
+
+void SufficientSizeTest()
+{
+    Allocator all;
+    all.makeAllocator(sizeof(char) * 10);
+    char* a = all.alloc(sizeof(char) * 5);
+    assert(a != nullptr);
+}
+
+void InsufficientSizeTest()
+{
+    Allocator all;
+    all.makeAllocator(sizeof(char) * 10);
+    char* a = all.alloc(sizeof(char) * 5);
+    char* b = all.alloc(sizeof(char) * 15);
+    assert(a != nullptr);
+    assert(b == nullptr);
+}
+
+void ResetTest()
+{
+    Allocator all;
+    all.makeAllocator(sizeof(char) * 10);
+    all.reset();
+    assert(all.ptr != nullptr);
+}
+
+void ReallocateTest()
+{
+    Allocator all;
+    all.makeAllocator(sizeof(char) * 10);
+    char* a = all.alloc(sizeof(char) * 7);
+    char* b = all.alloc(sizeof(char) * 8);
+    assert(a != nullptr);
+    assert(b == nullptr);
+    all.reset();
+    char* c = all.alloc(sizeof(char) * 8);
+    assert(c != nullptr);
+}
+
+void WorkTest()
+{
+    Allocator all;
+    all.makeAllocator(sizeof(char));
+    char* a = all.alloc(sizeof(char));
+    *a = 'a';
+    assert(*a == 'a');
+    char* b = all.alloc(sizeof(char));
+    assert(b == nullptr);
+    all.reset();
+    char* c = all.alloc(sizeof(char));
+    *c = 'c';
+    assert(*c == 'c');
+}
+
 int main()
 {
-    std::cout << "Test start"  << std::endl;
-    Allocator al;
-    std::cout << "Allocator created" << std::endl;
-    al.makeAllocator(sizeof(char) * 20);
-    assert(al.ptr != nullptr);
-    std::cout << "Allocator with sizeof(char) * 7 memory" << std::endl;
-    char* a = al.alloc(sizeof(char) * 7);
-    assert(a != nullptr);
-    char* b = al.alloc(sizeof(char) * 1);
-    std::cout << "Allocated sizeof(char) * 1 memory" << std::endl;
-    assert(b != nullptr);
-    char* c = al.alloc(sizeof(char) * 15);
-    std::cout << "Try allocate sizeof(char) * 15 memory" << std::endl;
-    assert(c == nullptr);
-    al.reset(); // перевыделили тот же размер
-    char* d = al.alloc(sizeof(char) * 16);
-    std::cout << "Reset an allocate szeof(char) * 16 memory" << std::endl;
-    assert(d != nullptr);
-    al.makeAllocator(sizeof(char) * 40);
-    std::cout << "Remake allocator and  allocate sizeof(char) * 30 memory" << std::endl;
-    char* e = al.alloc(sizeof(char) * 30);
-    assert(e != nullptr);
-    std::cout << std::endl;
+    DefaultWorkTest();
+    SufficientSizeTest();
+    InsufficientSizeTest();
+    ResetTest();
+    ReallocateTest();
+    WorkTest();
+
+    std::cout<< "Success!\n";
+
     return 0;
 }

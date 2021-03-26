@@ -4,16 +4,12 @@
 
 #include <iostream>
 
-int Allocator::makeAllocator()
-{
-    return 11;
-}
 void Allocator::makeAllocator(size_t maxSize)
 {
-    if (ptr) free(ptr); // если уже что то выделенно, стираем и выделяем снова
+    if (ptr) delete ptr; // если уже что то выделенно, стираем и выделяем снова
     _available_size = maxSize;
     _used_size = 0;
-    ptr = (char*)malloc(sizeof(char) * _available_size); //  выделяем нужный размер
+    ptr = new char(_available_size); //  выделяем нужный размер
 }
 char* Allocator::alloc(size_t size)
 {
@@ -31,9 +27,14 @@ char* Allocator::alloc(size_t size)
 }
 void Allocator::reset()
 {
-    // Полность очистить или перевыделить?
-    free(ptr);
+    // поменять внутренне состояние аллокатора
+
+    // сбросить все?
+    // _available_size = 0;
+    // _used_size = 0;
+    // ptr = nullptr; // в этом случае нужно очищать
+
+    // или обнулить использованный размер?
     _used_size = 0;
-    ptr = (char*)malloc(sizeof(char) * _available_size); //  выделяем нужный размер
     return;
 }

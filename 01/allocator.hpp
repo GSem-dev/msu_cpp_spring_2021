@@ -6,14 +6,13 @@ class Allocator
 {
 public:
 //    Allocator() = default;
-    int makeAllocator();
     void makeAllocator(size_t maxSize);
     char* alloc(size_t size);
     void reset();
     char* ptr = nullptr; //  сам указатель на перый (0) элемент
     ~Allocator()
     {
-         if(ptr) free(ptr);
+         if(ptr) delete ptr;
     }
 
 private:
