@@ -1,13 +1,16 @@
 all: matrix
 
-matrix : Matrix.o test.o
+test: matrix Matrix.o test.o
+	./matrix
+
+matrix: Matrix.o test.o
 		g++ Matrix.o test.o -o matrix
 
-Matrix.o : Matrix.cpp
+Matrix.o: Matrix.cpp
 	g++ -c Matrix.cpp
 
-test.o : test.cpp
+test.o: test.cpp
 	g++ -c test.cpp
 
-clean :
+clean:
 	rm -rf *.o matrix
