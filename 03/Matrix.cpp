@@ -1,5 +1,5 @@
 #include "Matrix.h"
-Matrix::MyVector::MyVector(int* Vec, const Length N)
+Matrix::MyVector::MyVector(int32_t* Vec, const Length N)
 {
 	len = N;
 	MyVec = Vec;
@@ -11,7 +11,7 @@ Matrix::MyVector Matrix:: operator[](const size_t i)
 	else return MyVector(matrix[i], rows);
 }
 
-int& Matrix::MyVector::operator[](const size_t i)
+int32_t& Matrix::MyVector::operator[](const size_t i)
 {
 	if (i > len) throw std::out_of_range("");
 	else return MyVec[i];
@@ -28,7 +28,7 @@ const Matrix::MyVector  Matrix::operator[](const size_t i) const
 	else return MyVector(matrix[i], rows);
 }
 
-const int& Matrix::MyVector::operator[](const size_t i) const
+const  int32_t& Matrix::MyVector::operator[](const size_t i) const
 {
 	if (i > this->len) throw std::out_of_range("");
 	else return this->MyVec[i];
@@ -39,27 +39,27 @@ Matrix::Matrix(const size_t i,const size_t j)
 {
 	this->columns = i;
 	this->rows = j;
-	this->matrix = new int* [i];
+	this->matrix = new  int32_t* [i];
 	for (size_t k = 0; k < i; k++)
 	{ 
-		this->matrix[k] = new int[j];
+		this->matrix[k] = new  int32_t[j];
 	}
 }
 
 Matrix::Matrix(const Matrix& A)
 {
-	this->columns = A.columns;
-	this->rows = A.rows;
-	this->matrix = new int* [columns];
+	columns = A.columns;
+	rows = A.rows;
+	matrix = new  int32_t* [columns];
 	for (size_t k = 0; k < columns; k++)
 	{
-		this->matrix[k] = new int[rows];
+		this->matrix[k] = new  int32_t[rows];
 	}
 	for (size_t i = 0; i < columns; i++)
 	{
 		for (size_t j = 0; j < rows; j++)
 		{
-			this->matrix[i][j] = A.matrix[i][j];
+			matrix[i][j] = A.matrix[i][j];
 		}
 	}
 }
@@ -74,9 +74,9 @@ const size_t Matrix::getColumns() const
 	return columns;
 }
 
-void Matrix::operator=(Matrix& Mat)
+void Matrix::operator=(Matrix& A)
 {
-	if (this->columns != Mat.columns || rows != Mat.rows)
+	if (this->columns != A.columns || rows != A.rows)
 	{
 		throw std::out_of_range("");
 	}
@@ -86,13 +86,13 @@ void Matrix::operator=(Matrix& Mat)
 		{
 			for (size_t j = 0; j < rows; ++j)
 			{
-				this->matrix[i][j] = Mat[i][j];
+				this->matrix[i][j] = A[i][j];
 			}
 		}
 	}
 }
 
-void Matrix:: operator*=(const int a)
+void Matrix:: operator*=(const  int32_t a)
 {
 	for (size_t i = 0; i < columns; i++)
 	{
@@ -103,16 +103,16 @@ void Matrix:: operator*=(const int a)
 	}
 	
 }
-bool Matrix::operator==(const Matrix Matrix) const
+bool Matrix::operator==(const Matrix A) const
 {
-	if (columns != Matrix.columns || rows != Matrix.rows) return false;
+	if (columns != A.columns || rows != A.rows) return false;
 	else 
 	{
 		for (size_t i = 0; i < columns; ++i)
 		{
 			for (size_t j = 0; j < rows; ++j)
 			{
-				if (matrix[i][j] != Matrix[i][j])
+				if (matrix[i][j] != A[i][j])
 				{
 					return false;
 				}
@@ -122,10 +122,10 @@ bool Matrix::operator==(const Matrix Matrix) const
 	}
 }
 
-bool Matrix::operator!=(const Matrix Matrix) const
+bool Matrix::operator!=(const Matrix A) const
 {
-	if (columns != Matrix.columns || rows != Matrix.rows) return false;
-	else return !(*this == Matrix);
+	if (columns != A.columns || rows != A.rows) return false;
+	else return !(*this == A);
 }
 
 std::ostream& operator<< (std::ostream& out, const Matrix& point)

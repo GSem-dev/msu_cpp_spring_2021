@@ -26,13 +26,12 @@ void FillTest() {
            
         }
     }
+    std::cout<<m<<std::endl;
     tmp_m = m;
-    assert(tmp_m == m);
+    assert(tmp_m==m);
     m *= 10;
     assert(m[0][1] == 50);
     assert(tmp_m != m);
-    Matrix m2(m);
-    assert(m == m2);
 }
 
 void ShowTest() {
@@ -57,6 +56,7 @@ void ExceptionTest() {
         }
     }
     m[2][8] = 11; // должны выскочить ошибка
+
 }
 
 int main() {
