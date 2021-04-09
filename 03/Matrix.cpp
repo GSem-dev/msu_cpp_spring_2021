@@ -1,4 +1,6 @@
 #include "Matrix.h"
+
+
 Matrix::MyVector::MyVector(int32_t* Vec, const size_t N)
 {
 	len = N;
@@ -103,6 +105,7 @@ void Matrix:: operator*=(const  int32_t a)
 	}
 	
 }
+
 bool Matrix::operator==(const Matrix A) const
 {
 	if (columns != A.columns || rows != A.rows) return false;

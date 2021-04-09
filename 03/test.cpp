@@ -4,14 +4,11 @@
 void InitTest() {
     const size_t rows = 2;
     const size_t cols = 2;
-
     Matrix m(cols,rows);
-
     assert(m.getRows() == 2);
     assert(m.getColumns() == 2);
-
-    m[1][2] = 10;
-    double x = m[1][2];
+    m[1][1] = 10;
+    int32_t x = m[1][1];
     assert(x == 10);
 }
 
@@ -22,8 +19,7 @@ void FillTest() {
     Matrix tmp_m(cols, rows);
     for (int i = 0; i < cols; i++) {
         for (int j = 0; j < rows; j++) {
-            m[i][j] = 5;
-           
+            m[i][j] = 5;           
         }
     }
     std::cout<<m<<std::endl;
@@ -56,7 +52,6 @@ void ExceptionTest() {
         }
     }
     m[2][8] = 11; // должны выскочить ошибка
-
 }
 
 int main() {

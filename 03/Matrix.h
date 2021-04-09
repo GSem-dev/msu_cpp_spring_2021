@@ -5,7 +5,6 @@
 
 class Matrix
 {
-
 	int32_t** matrix;
 	size_t columns;
 	size_t rows;
@@ -30,8 +29,6 @@ class Matrix
 		void operator*=(const  int32_t a);
 		bool operator==(const Matrix A) const;
 		bool operator!=(const Matrix A) const;
-		friend std::ostream& operator<< (std::ostream& out, const Matrix& point);
-		
+		friend std::ostream& operator<< (std::ostream& out, const Matrix& point);		
 		~Matrix();
-
 };
