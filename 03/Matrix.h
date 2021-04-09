@@ -9,27 +9,26 @@ class Matrix
 	int** matrix;
 	size_t columns;
 	size_t rows;
-	public:
-		Matrix(const size_t i,const size_t j);
-		Matrix(const Matrix& A);
-		const size_t getRows() const;
-		const size_t getColumns() const;
-		
+	public:	
 		class MyVector
 		{
-			using Len = size_t;
+			using Length = size_t;
 			int* MyVec;
-			Len len;
+			Length len;
 		public:
-			MyVector(int* Vec, const Len N);
+			MyVector(int* Vec, const Length N);
 			int& operator[](const size_t i);
 			const int& operator[](const size_t i) const;
 			void operator=(const MyVector Vec);
 		};
 		MyVector operator[](const size_t i);
 		const MyVector  operator[](const size_t i) const;
-		void operator*=(const int a);
+		Matrix(const size_t i,const size_t j);
+		Matrix(const Matrix& A);
+		const size_t getRows() const;
+		const size_t getColumns() const;
 		void operator=(Matrix& Mat);
+		void operator*=(const int a);
 		bool operator==(const Matrix Matrix) const;
 		bool operator!=(const Matrix Matrix) const;
 		friend std::ostream& operator<< (std::ostream& out, const Matrix& point);
