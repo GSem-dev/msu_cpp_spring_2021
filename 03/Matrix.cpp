@@ -1,5 +1,5 @@
 #include "Matrix.h"
-Matrix::MyVector::MyVector(int32_t* Vec, const Length N)
+Matrix::MyVector::MyVector(int32_t* Vec, const size_t N)
 {
 	len = N;
 	MyVec = Vec;

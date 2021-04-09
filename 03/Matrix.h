@@ -12,11 +12,10 @@ class Matrix
 	public:	
 		class MyVector
 		{
-			using Length = size_t;
 			int32_t* MyVec;
-			Length len;
+			size_t len;
 		public:
-			MyVector(int* Vec, const Length N);
+			MyVector(int* Vec, const size_t N);
 			int32_t& operator[](const size_t i);
 			const  int32_t& operator[](const size_t i) const;
 			void operator=(const MyVector Vec);
