@@ -49,10 +49,7 @@ BigInt::BigInt(BigInt&& A)
 
 BigInt& BigInt::operator=(BigInt&& A)
 {
-	if (this == &A)
-	{
-		return *this;
-	}
+	if (this == &A) return *this;
 	delete[] Data;
 	Data = nullptr;
 	Len = A.Len;
@@ -114,10 +111,7 @@ BigInt::BigInt(const BigInt& A)
 
 BigInt& BigInt::operator=(const BigInt& A)
 {
-	if (this == &A)
-	{
-		return *this;
-	}
+	if (this == &A) return *this;
 	uint16_t* ptr = new uint16_t[A.Len];
 	for (size_t i = 0; i < A.Len; i++)
 	{
@@ -133,39 +127,20 @@ BigInt& BigInt::operator=(const BigInt& A)
 
 bool BigInt::operator==(const BigInt& A) const
 {
-	if (Len != A.Len || sign != A.sign)
-	{
-		return false;
-	}
+	if (Len != A.Len || sign != A.sign) return false;
 	for (size_t i = 0; i < Len; i++)
 	{
-		if (Data[i] != A.Data[i])
-		{
-			return false;
-		}
+		if (Data[i] != A.Data[i]) return false;
 	}
 	return true;
 }
 
 bool BigInt::operator>(const BigInt& A) const
 {
-	if (sign == true && A.sign == false)
-	{
-		return true;
-	}
-	else if (sign == false && A.sign == true)
-	{
-		return false;
-	}
-
-	if (Len > A.Len)
-	{
-		return true;
-	}
-	else if (Len < A.Len)
-	{
-		return false;
-	}
+	if (sign == true && A.sign == false) return true;
+	else if (sign == false && A.sign == true) return false;
+	if (Len > A.Len) return true;
+	else if (Len < A.Len) return false;
 	if (!sign && !A.sign)
 	{
 
@@ -181,54 +156,34 @@ bool BigInt::operator>(const BigInt& A) const
 	}
 	for (size_t i = 0; i < Len; i++)
 	{
-		if (Data[Len - i - 1] < A.Data[Len - i - 1])
-		{
-			return false;
-		}
+		if (Data[Len - i - 1] < A.Data[Len - i - 1]) return false;
 	}
-	if (*this == A)
-	{
-		return false;
-	}
+	if (*this == A) return false;
 	return true;
 }
 
 bool BigInt::operator<(const BigInt& A) const
 {
-	if (*this == A || *this > A)
-	{
-		return false;
-	}
+	if (*this == A || *this > A) return false;
 	return true;
 }
 
 bool BigInt::operator!=(const BigInt& A) const
 {
-	if (*this == A)
-	{
-		return false;
-	}
+	if (*this == A) return false;
 	return true;
 }
 bool BigInt::operator>=(const BigInt& A) const
 {
-	if (*this > A || *this == A)
-	{
-		return true;
-	}
+	if (*this > A || *this == A) return true;
 	return false;
 }
 
 bool BigInt::operator<=(const BigInt& A) const
 {
-	if (*this < A || *this == A)
-	{
-		return true;
-	}
+	if (*this < A || *this == A) return true;
 	return false;
 }
-
-
 
 void BigInt::abs_plus(const BigInt& A, const BigInt& B)
 {
@@ -241,29 +196,14 @@ void BigInt::abs_plus(const BigInt& A, const BigInt& B)
 	}
 	for (size_t i = 0; i < Len - 1; i++)
 	{
-		if (i < A.Len && i < B.Len)
-		{
-			ptr[i] += A.Data[i] + B.Data[i];
-		}
-		else if (i < A.Len)
-		{
-			ptr[i] += A.Data[i];
-		}
-		else
-		{
-			ptr[i] += B.Data[i];
-		}
+		if (i < A.Len && i < B.Len) ptr[i] += A.Data[i] + B.Data[i];
+		else if (i < A.Len) ptr[i] += A.Data[i];
+		else ptr[i] += B.Data[i];
 		ptr[i + 1] += (ptr[i] / 10);
 		ptr[i] %= 10;
 	}
-	if (ptr[Len - 1] == 0)
-	{
-		Len = Len - 1;
-	}
-	if (Len == 0)
-	{
-		Len = 1;
-	}
+	if (ptr[Len - 1] == 0) Len = Len - 1;
+	if (Len == 0) Len = 1;
 	Data = new uint16_t[Len];
 	for (size_t i = 0; i < Len; i++)
 	{
@@ -285,10 +225,7 @@ void BigInt::abs_minus(const BigInt& A, const BigInt& B)
 
 	for (size_t i = 0; i < Len; i++)
 	{
-		if (i >= B.Len)
-		{
-			break;
-		}
+		if (i >= B.Len) break;
 		int z = ptr[i] - B.Data[i];
 		if (z < 0)
 		{
@@ -312,11 +249,7 @@ void BigInt::abs_minus(const BigInt& A, const BigInt& B)
 	{
 		Len -= 1;
 	}
-	if (Len == 0)
-	{
-		Len = 1;
-	}
-
+	if (Len == 0) Len = 1;
 	Data = new uint16_t[Len];
 	for (size_t i = 0; i < Len; i++)
 	{
@@ -335,11 +268,7 @@ size_t BigInt::getLen() const
 BigInt BigInt::operator-()
 {
 	BigInt B(*this);
-	//std::cout << B;
-	if (Len == 1 && Data[0] == 0)
-	{
-		return B;
-	}
+	if (Len == 1 && Data[0] == 0) return B;
 	B.sign = !B.sign;
 	return B;
 }
@@ -353,7 +282,6 @@ BigInt BigInt::operator+(const BigInt& A) const
 		B.abs_plus(*this, K);
 		delete[] K.Data;
 		K.Data = nullptr;
-		//std::cout << B << std::endl;
 	}
 	else if (sign && !A.sign)
 	{	
@@ -373,10 +301,7 @@ BigInt BigInt::operator+(const BigInt& A) const
 	else if (!sign && A.sign)
 	{
 		BigInt K(*this);
-		if (A >= -K)
-		{
-			B.abs_minus(A, K);
-		}
+		if (A >= -K) B.abs_minus(A, K);
 		else
 		{
 			B.abs_minus(K, A);
@@ -393,6 +318,7 @@ BigInt BigInt::operator+(const BigInt& A) const
 	}
 	return B;
 }
+
 BigInt BigInt::operator-(const BigInt& A) const
 {
 	BigInt B;
