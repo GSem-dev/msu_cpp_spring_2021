@@ -64,8 +64,9 @@ void ThrowTest()
 
 int main()
 {
-    
-    
+    ClassTest();
+    EqualTest();
+    ThrowTest();
 
     std::cout << "done\n";
 	return 0;
