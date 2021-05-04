@@ -157,13 +157,8 @@ void NumNullptrTest()
 }
 
 void NullptrCallTest()
-{
-    auto st = nullptr;
-    auto en = nullptr;
-    auto nu = nullptr;
-    auto le = nullptr;
-    
-    TokenParser prs {nu, le, st, en};
+{    
+    TokenParser prs {};
     prs.pars(" w dd ab c21 ");
 }
 
