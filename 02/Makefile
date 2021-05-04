@@ -1,13 +1,15 @@
 CC=g++
-FLAGS= -std=c++17 -Werror -Wall -fsanitize=address -Wextra
+FLAGS= --std=c++17 -Werror -Wall -fsanitize=address -Wextra
 
 all: test.o parser.o
 	$(CC) $(FLAGS) test.o parser.o -o test
-test.o: test.cpp
+test.o: test.cpp parser.o
 	$(CC) $(FLAGS) test.cpp -c
-parser.o: parser.cpp
+	$(CC) $(FLAGS) parser.o test.o -o test
+	./test
+parser.o: parser.cpp parser.hpp
 	$(CC) $(FLAGS) parser.cpp -c
-lib:
+test:
 	g++ -c parser.cpp
 	g++ -c test.cpp
 	ar rvs libparser.a parser.o

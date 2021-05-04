@@ -6,11 +6,11 @@
 bool is_digits(const std::string &str)
 {
     if (str.empty()) return false;
+    std::string clear_std = str.substr(str.find_first_not_of("0"));
     std::string max = "18446744073709551615";
-    if (str.size() > max.size()) return false;
-    if (str.size() == max.size() and  str>max) return false;
-    return str.find_first_not_of("0123456789") == std::string::npos;
-    //return std::all_of(str.begin(), str.end(), ::isdigit);
+    if (clear_std.size() > max.size()) return false;
+    if (clear_std.size() == max.size() and  clear_std>max) return false;
+    return clear_std.find_first_not_of("0123456789") == std::string::npos;
 }
 void TokenParser::SetStartCallback(trholds start_cb)
 {
@@ -39,22 +39,20 @@ void TokenParser::pars(const std::string &str)
     {
         Beg();
     }
-    //prev = str.find_first_of(" \t\n"); // где начинается отступ
-    // а усли нет символов табуляции?
     do
     {
         prev = str.find_first_of(" \t\n", pos);
         pos2 = (prev!=std::string::npos) ? prev : str.size();
         token = str.substr(pos, pos2 - pos);
-        if (Num!=nullptr && is_digits(token))
+        if (is_digits(token))
         {
-            //std::cout<< token << std::endl;
-            unsigned long long number = std::stoull(token);
-            Num(number); 
+            std::string clear_std = token.substr(token.find_first_not_of("0"));
+            unsigned long long number = std::stoull(clear_std);
+            if (Num!=nullptr) Num(number); 
         }
-        else if (Let!=nullptr && token!="")
+        else if (token!="")
         {
-            Let(token);
+            if (Let!=nullptr) Let(token);
         }
         pos = str.find_first_not_of(" \t\n", pos2);
 
