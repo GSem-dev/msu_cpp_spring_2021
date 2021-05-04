@@ -12,7 +12,7 @@ public:
     char* ptr = nullptr; //  сам указатель на перый (0) элемент
     ~Allocator()
     {
-         if(ptr) delete ptr;
+         if(ptr) delete[] ptr;
     }
 
 private:

@@ -1,5 +1,5 @@
 CC=g++
-FLAGS= -std=c++17 -Werror -Wall -fsanitize=address -Wextra
+FLAGS= -std=c++17 -Werror -Wall -fsanitize=address
 
 all: main.o allocator.o
 	$(CC) $(FLAGS) main.o allocator.o -o main

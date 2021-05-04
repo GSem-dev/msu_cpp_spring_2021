@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cstddef>
 #include <cassert>
+#include <exception>
+#include <stdexcept> 
 
 void DefaultWorkTest()
 {
@@ -52,16 +54,49 @@ void ReallocateTest()
 void WorkTest()
 {
     Allocator all;
-    all.makeAllocator(sizeof(char));
+    all.makeAllocator(sizeof(char)*2);
     char* a = all.alloc(sizeof(char));
     *a = 'a';
-    assert(*a == 'a');
     char* b = all.alloc(sizeof(char));
-    assert(b == nullptr);
+    *b = 'b';
+    assert(*a == 'a');
+    assert(*b == 'b');
     all.reset();
     char* c = all.alloc(sizeof(char));
     *c = 'c';
     assert(*c == 'c');
+    assert(*b == 'b');
+    char* d = all.alloc(sizeof(char)*5);
+    assert(d == nullptr);
+}
+
+void MultipleMakeAlloc()
+{
+    Allocator all;
+    all.makeAllocator(sizeof(char));
+    char* a = all.alloc(sizeof(char));
+    *a = 'a';
+    assert(*a == 'a');
+    char* ab = all.alloc(sizeof(char));
+    assert(ab == nullptr);
+    all.makeAllocator(sizeof(char)*2);
+    char* b = all.alloc(sizeof(char));
+    *b = 'b';
+    char* c = all.alloc(sizeof(char));
+    *c = 'c';
+    assert(*c == 'c');
+    assert(*b == 'b');
+}
+
+void AllocBeforeMake()
+{
+    Allocator all;
+    char* a = all.alloc(sizeof(char));
+    assert(a == nullptr);
+    all.makeAllocator(sizeof(char));
+    a = all.alloc(sizeof(char));
+    *a = 'a';
+    assert(*a == 'a');    
 }
 
 int main()
@@ -72,8 +107,8 @@ int main()
     ResetTest();
     ReallocateTest();
     WorkTest();
-
-    std::cout<< "Success!\n";
-
+    MultipleMakeAlloc();
+    AllocBeforeMake();
+    std::cout<<"success"<<std::endl;
     return 0;
 }

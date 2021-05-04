@@ -6,11 +6,12 @@
 
 void Allocator::makeAllocator(size_t maxSize)
 {
-    if (ptr) delete ptr; // если уже что то выделенно, стираем и выделяем снова
+    if (ptr) delete[] ptr; // если уже что то выделенно, стираем и выделяем снова
     _available_size = maxSize;
     _used_size = 0;
-    ptr = new char(_available_size); //  выделяем нужный размер
+    ptr = new char[_available_size]; //  выделяем нужный размер
 }
+
 char* Allocator::alloc(size_t size)
 {
     if (ptr && (size + _used_size <= _available_size))
@@ -25,6 +26,7 @@ char* Allocator::alloc(size_t size)
         return nullptr;
     }
 }
+
 void Allocator::reset()
 {
     // поменять внутренне состояние аллокатора
