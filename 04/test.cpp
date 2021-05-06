@@ -118,6 +118,11 @@ void InterestingTest()
     BigInt b("99999999");
     BigInt c = a + b;
     assert(a+b == 100000000);
+    BigInt e = 0;
+    BigInt f = 0;
+    BigInt g = e+f;
+    assert(g == 0);
+    
 }
 
 
