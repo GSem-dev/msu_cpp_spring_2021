@@ -19,10 +19,11 @@ int32_t& Matrix::MyVector::operator[](const size_t i)
 	else return MyVec[i];
 }
 
-void Matrix::MyVector::operator=(const MyVector Vec)
-{
-	MyVec = Vec.MyVec;
-}
+//void Matrix::MyVector::operator=(const MyVector Vec)
+//{
+//	MyVec = Vec.MyVec;
+//	std::cout<<"operator= hello!"<<std::endl;
+//}
 
 const Matrix::MyVector  Matrix::operator[](const size_t i) const
 {
@@ -68,15 +69,15 @@ Matrix::Matrix(const Matrix& A)
 
 const size_t Matrix::getRows() const
 {
-	return rows;
+	return columns;
 }
 
 const size_t Matrix::getColumns() const
 {
-	return columns;
+	return rows;
 }
 
-void Matrix::operator=(Matrix& A)
+void Matrix::operator=(Matrix A)
 {
 	if (this->columns != A.columns || rows != A.rows)
 	{
@@ -94,7 +95,19 @@ void Matrix::operator=(Matrix& A)
 	}
 }
 
-void Matrix:: operator*=(const  int32_t a)
+Matrix Matrix::operator+(const Matrix& A) const
+{
+    if (columns != A.columns || rows != A.rows) throw std::out_of_range("!");
+    Matrix tmp_m(rows, columns);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            tmp_m[i][j] = this->matrix[i][j] + A[i][j];
+        }
+    }
+    return tmp_m;
+}
+
+Matrix* Matrix:: operator*=(const  int32_t a)
 {
 	for (size_t i = 0; i < columns; i++)
 	{
@@ -103,7 +116,9 @@ void Matrix:: operator*=(const  int32_t a)
 			this->matrix[i][j] *= a;
 		}
 	}
-	
+	// так?
+	return this;
+	//return *this; //?
 }
 
 bool Matrix::operator==(const Matrix A) const

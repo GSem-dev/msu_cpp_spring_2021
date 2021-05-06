@@ -17,7 +17,7 @@ class Matrix
 			MyVector(int* Vec, const size_t N);
 			int32_t& operator[](const size_t i);
 			const  int32_t& operator[](const size_t i) const;
-			void operator=(const MyVector Vec);
+			//void operator=(const MyVector Vec);
 		};
 		MyVector operator[](const size_t i);
 		const MyVector  operator[](const size_t i) const;
@@ -25,8 +25,10 @@ class Matrix
 		Matrix(const Matrix& A);
 		const size_t getRows() const;
 		const size_t getColumns() const;
-		void operator=(Matrix& A);
-		void operator*=(const  int32_t a);
+		void operator=(Matrix A);
+		//void operator=(Matrix& A);
+		Matrix operator+(const Matrix& A) const;
+		Matrix* operator*=(const  int32_t a);
 		bool operator==(const Matrix A) const;
 		bool operator!=(const Matrix A) const;
 		friend std::ostream& operator<< (std::ostream& out, const Matrix& point);		
