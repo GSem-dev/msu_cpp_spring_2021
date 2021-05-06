@@ -1,14 +1,20 @@
+CC=g++
+FLAGS= -std=c++17 -Werror -Wall -fsanitize=address
+
 all: serializer
-	./serializer
 
 serializer: Serializer.o test.o
-		g++ -o serializer Serializer.o test.o
+	$(CC) $(FLAGS) Serializer.o test.o -o serializer
 
-Serializer.o : Serializer.cpp Serializer.h
-	g++ -c Serializer.cpp
+Serializer.o: Serializer.cpp Serializer.h
+	$(CC) $(FLAGS) Serializer.cpp -c 
 
-test.o: test.cpp Serializer.h serializer
-	g++ -c test.cpp
+test.o:
+	$(CC) $(FLAGS) test.cpp -c
+	
+test: test.o Serializer.o
+	$(CC) $(FLAGS) Serializer.o test.o  -o test
+	./test
 
 clean:
-	rm -rf *.o serializer
+	rm -rf *.o serializer test
