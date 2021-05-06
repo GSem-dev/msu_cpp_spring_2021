@@ -1,15 +1,22 @@
-#include "BigInt.h"
+#include "BigInt.hpp"
 
 
-BigInt::BigInt()
+BigInt::BigInt() // default
 {
 	sign = true;
-	Len = 1;
-	Data = new uint16_t[Len];
-	Data[0] = static_cast<uint16_t>(0);
+	Len = 0;
+	Data = nullptr;
 }
 
-BigInt::BigInt(const int64_t& A)
+BigInt::BigInt(const BigInt& A) // Copy constructor
+{
+	Len = A.Len;
+	sign = A.sign;
+	Data = new uint16_t[Len];
+	std::copy(A.Data, A.Data + Len, Data);
+}
+
+BigInt::BigInt(const int32_t& A)
 {
 	sign = (A >= 0) ? true : false;
 	uint64_t new_nam = (sign) ? A : (-1) * A;
@@ -30,12 +37,13 @@ BigInt::BigInt(const int64_t& A)
 	if (Len == 0)
 	{
 		Len = 1;
+		delete[] Data;
 		Data = new uint16_t[Len];
-		Data[0] = static_cast<uint16_t>(0);
+		Data[0] = 0;
 	}
 }
 
-BigInt::BigInt(BigInt&& A)
+BigInt::BigInt(BigInt&& A) // Move constructor
 	:Data(A.Data)
 	,Len(A.Len)
 	,sign(A.sign)
@@ -45,9 +53,36 @@ BigInt::BigInt(BigInt&& A)
 	A.sign = 1;
 }
 
+BigInt::BigInt(std::string&& str) // new
+{
+    std::string new_str;
+    if (str[0] == '-')
+    {
+        sign = false;
+        new_str = str.substr(1);
+    } else
+    {
+        sign = true;
+        new_str = str.substr(0);
+    }
+    Len = new_str.length();
+    Data = new uint16_t[Len];
+    for (size_t i = 0; i < Len; i++)
+    {
+        //Data[Len - i - 1] = atol(new_str[Len - i - 1]);
+        Data[i] = new_str[Len - i - 1] - '0';
+    }
+    if (Len == 0)
+    {
+        Len = 1;
+        delete[] Data;
+        Data = new uint16_t[Len];
+        Data[0] = static_cast<uint16_t>(0);
+    }
+    str.clear();
+}
 
-
-BigInt& BigInt::operator=(BigInt&& A)
+BigInt& BigInt::operator=(BigInt&& A) //Move operator
 {
 	if (this == &A) return *this;
 	delete[] Data;
@@ -61,13 +96,24 @@ BigInt& BigInt::operator=(BigInt&& A)
 	return *this;
 }
 
+BigInt& BigInt::operator=(const BigInt& A) // Copy operator
+{
+	if (this == &A) return *this;
+	uint16_t* ptr = new uint16_t[A.Len];
+	for (size_t i = 0; i < A.Len; i++)
+	{
+		ptr[i] = A.Data[i];
+	}
+	delete[] Data;
+	Len = A.Len;
+	sign = A.sign;
+	Data = ptr;
+	std::copy(A.Data, A.Data + Len, Data);
+	return *this;
+}
+
 std::ostream& operator<<(std::ostream& out, const BigInt& point)
 {
-	/*if (point.Len == 1 && point.Data[0] == 0)
-	{
-		out << 0;
-		return out;
-	}*/
 	const char* s = (point.sign) ? "" : "-";
 	out << s;
 	for (size_t i = 0; i < point.Len; i++)
@@ -75,13 +121,6 @@ std::ostream& operator<<(std::ostream& out, const BigInt& point)
 		out << point.Data[point.Len - i - 1];
 	}
 	return out;
-}
-
-BigInt::~BigInt()
-{	Len = 0;
-	sign = 0;
-	delete[] Data;
-	Data = nullptr;
 }
 
 std::ostream& operator<< (std::ostream& out, const BigInt&& point)
@@ -95,33 +134,20 @@ std::ostream& operator<< (std::ostream& out, const BigInt&& point)
 	return out;
 }
 
-
-BigInt::BigInt(const BigInt& A)
+BigInt& BigInt::operator=(const int32_t& A) //new
 {
-	Len = A.Len;
-	sign = A.sign;
-	Data = new uint16_t[Len];
-	for (size_t i = 0; i < Len; i++)
-	{
-		Data[i] = A.Data[i];
-	}
-
-	std::copy(A.Data, A.Data + Len, Data);
+	BigInt tmp(A);
+	*this = tmp;
+	return *this;
 }
 
-BigInt& BigInt::operator=(const BigInt& A)
+BigInt& BigInt::operator=(const int32_t&& A) //new
 {
-	if (this == &A) return *this;
-	uint16_t* ptr = new uint16_t[A.Len];
-	for (size_t i = 0; i < A.Len; i++)
-	{
-		ptr[i] = A.Data[i];
-	}
-	delete[] Data;
-	Len = A.Len;
-	sign = A.sign;
-	Data = ptr;
-	std::copy(A.Data, A.Data + Len, Data);
+	BigInt tmp(A);
+	*this = std::move(tmp);
+	tmp.Data = nullptr;
+	tmp.sign = 0;
+	tmp.Len = 0;
 	return *this;
 }
 
@@ -278,10 +304,7 @@ BigInt BigInt::operator+(const BigInt& A) const
 	BigInt B;
 	if (sign && A.sign)
 	{
-		BigInt K(A);
-		B.abs_plus(*this, K);
-		delete[] K.Data;
-		K.Data = nullptr;
+		B.abs_plus(*this, A);
 	}
 	else if (sign && !A.sign)
 	{	
@@ -316,7 +339,13 @@ BigInt BigInt::operator+(const BigInt& A) const
 		B.abs_plus(*this, A);
 		B.sign = false;
 	}
-	return B;
+	return BigInt(B);
+}
+
+BigInt BigInt::operator+(const int32_t& A) const
+{
+    BigInt tmp = A;
+    return *this + tmp;
 }
 
 BigInt BigInt::operator-(const BigInt& A) const
@@ -327,3 +356,49 @@ BigInt BigInt::operator-(const BigInt& A) const
 	return B;
 }
 
+BigInt BigInt::operator-(const int32_t& A) const
+{
+    BigInt tmp = A;
+    return *this - tmp;
+}
+
+BigInt BigInt::operator*(const BigInt& A) const
+{
+    int ten;
+    int unit;
+    int n;
+    BigInt tmp(std::string(Len+A.Len, '0'));
+    for (size_t i = 0; i < A.Len; i++){
+        for (size_t j = 0; j < Len; j++){
+            n =  A.Data[i] * Data[j];
+            unit = n % 10;
+            ten = n / 10;
+            tmp.Data[i+j] = tmp.Data[i+j] + unit;
+            tmp.Data[i+j+1] = tmp.Data[i+j+1] + ten;
+        }
+    }
+    tmp.sign = !(sign ^ A.sign);
+    if (tmp.Data[Len+A.Len-1] == 0){
+        BigInt B;
+        B.Len = tmp.Len - 1;
+        B.Data = new uint16_t[B.Len];
+        std::copy(tmp.Data, tmp.Data + B.Len, B.Data);
+        B.sign = tmp.sign;
+        return BigInt(B);
+    }
+    return BigInt(tmp);
+}
+
+BigInt BigInt::operator*(const int32_t& A) const
+{
+    BigInt tmp = A;
+    return *this * tmp;
+}
+
+BigInt::~BigInt()
+{	
+    delete[] Data;
+    Len = 0;
+    sign = true;
+    Data = nullptr;
+}

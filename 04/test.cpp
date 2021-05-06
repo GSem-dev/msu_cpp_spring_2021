@@ -1,128 +1,140 @@
-#include "BigInt.h"
+#include "BigInt.hpp"
 #include <iostream>
 #include <limits>
 #include <sstream>
-std::string toString(const BigInt& value)
+#include <cassert>
+
+
+
+void EqualTest()
 {
-    std::stringstream buf;
-    buf << value;
-    return buf.str();
+    BigInt x = 3;
+    assert(x == 3);
+    BigInt y = x;
+    assert(x == y);
+    assert(y == 3);
+    BigInt z;
+    z = 0;
+    int n = 5;
+    z = n;
+    assert(x != z);
 }
 
-void check(int64_t x, int64_t y)
+void MaxTest()
 {
-    const BigInt bigX = x;
-    const BigInt bigY = y;
-
-    if (bigX + bigY != BigInt(x + y))
-    {
-        std::cout << x << " + " << y << " != " << x + y << " got " << bigX + bigY << '\n';
-    }
-
-    if (bigX - bigY != BigInt(x - y))
-    {
-        std::cout << x << " - " << y << " != " << x - y << " got " << bigX - bigY << '\n';
-    }
+    const BigInt big = std::numeric_limits<int32_t>::max();
+    assert(big == std::numeric_limits<int32_t>::max());
 }
 
-void doCheckEqual(const BigInt& actual, const char* expected, size_t line)
+void StrTest()
 {
-    const auto str = toString(actual);
-    if (str != expected)
-    {
-        std::cout << "at line " << line << ": " << str << " != " << expected << '\n';
-    }
+    BigInt x("-11");
+    assert(x == -11);
+    BigInt s = 12;
+    BigInt z;
+    z = x+s;
+    assert(z == 1);
 }
 
-#define checkEqual(x, y) do { doCheckEqual((x), (y), __LINE__); } while(0)
-#define checkTrue(cond) do { if (!(cond)) std::cout << "at line " << __LINE__ << ": " << #cond << '\n'; } while(0)
+void PlusTest()
+{
+    BigInt x = 4;
+    BigInt z = 3;
+    z = z + x + 3;
+    assert(z == 10);
+}
+
+void MinusTest()
+{
+    BigInt x = 4;
+    BigInt z = 3;
+    z = x - 3;
+    assert(z == 1);
+}
+
+void CompareTest()
+{
+    BigInt x = 4;
+    BigInt z = 3;
+    assert(x > z);
+    assert(z < x);
+    BigInt y = 3;
+    assert(y <= z);
+}
+
+void UnoMinusTets()
+{
+    BigInt x = 4;
+    x = -x;
+    assert(x == -4);
+}
+
+void MoveTest()
+{
+    BigInt c = 4;
+    BigInt d;
+    d = std::move(c);
+    assert(d == 4);
+}
+
+void CopyTest()
+{
+    BigInt c(4);
+    BigInt d(c);
+    BigInt a;
+    a = d;
+    BigInt b;
+    a = BigInt("123");
+    b = 1111;
+}
+
+void MullTest()
+{
+    BigInt a = 1;
+    BigInt c = 4;
+    BigInt d = -11;
+    BigInt e = d * c;
+    BigInt f = c * 3;
+    assert(e == -44);
+    assert(f == 12);
+    f = a * c;
+    assert(f == 4);
+}
+
+void ClassTest()
+{
+    BigInt a = 1;
+    BigInt b("123456789012345678901234567890");
+    BigInt c = a * b + 2;
+    BigInt d;
+    d = std::move(c);
+    a = d + b;
+    std::cout << a << std::endl;
+}
+
+void InterestingTest()
+{
+    BigInt a = 1;
+    BigInt b("99999999");
+    BigInt c = a + b;
+    assert(a+b == 100000000);
+}
 
 
 int main()
 {
-    BigInt x = 3;
-    checkEqual(x, "3");
-    BigInt y = x;
-    checkEqual(y, "3");
-    BigInt z;
-    checkEqual(z, "0");
-
-    checkEqual(BigInt(-10), "-10");
-
-    checkTrue(x == y);
-    checkTrue(y == x);
-    checkTrue(x != z);
-    checkTrue(z != x);
-
-    z = y;
-    checkEqual(z, "3");
-
-    x = 100;
-    checkEqual(x, "100");
-
-    checkTrue(!(x < x));
-    checkTrue(x < 200);
-    checkTrue(BigInt(50) < x);
-    checkTrue(BigInt(-500) < x);
-    checkTrue(BigInt(-500) < BigInt(-200));
-
-    checkTrue(!(x > x));
-    checkTrue(BigInt(200) > x);
-    checkTrue(x > BigInt(50));
-    checkTrue(x > BigInt(-500));
-    checkTrue(BigInt(-200) > BigInt(-500));
-
-    checkTrue(x <= x);
-    checkTrue(x <= 200);
-    checkTrue(BigInt(50) <= x);
-    checkTrue(BigInt(-500) <= x);
-    checkTrue(BigInt(-500) <= BigInt(-200));
-
-    checkTrue(x >= x);
-    checkTrue(BigInt(200) >= x);
-    checkTrue(x >= BigInt(50));
-    checkTrue(x >= BigInt(-500));
-    checkTrue(BigInt(-200) >= BigInt(-500));
-    checkTrue(BigInt(0) == -BigInt(0));
-
-    checkEqual(BigInt(10) + BigInt(10), "20");
-    checkEqual(BigInt(-10) + BigInt(10), "0");
-    checkEqual(BigInt(10) + BigInt(-10), "0");
-    checkEqual(BigInt(-10) + BigInt(-10), "-20");
-
-    checkEqual(BigInt(10) - BigInt(10), "0");
-    checkEqual(BigInt(-10) - BigInt(10), "-20");
-    checkEqual(BigInt(10) - BigInt(-10), "20");
-    checkEqual(BigInt(-10) - BigInt(-10), "0");
-    
-    checkEqual(BigInt(0) + BigInt(-1), "-1");
-    checkEqual(BigInt(0) - BigInt(1), "-1");
-    
-    checkEqual(BigInt(100) - BigInt(100), "0");
-    checkEqual(BigInt(99) - BigInt(100), "-1");
-    
-    const int64_t step = std::numeric_limits<uint32_t>::max() / 99;
-    const int64_t lower = std::numeric_limits<int32_t>::min() + step;
-    const int64_t upper = std::numeric_limits<int32_t>::max() - step;
-
-    for (int64_t i = lower; i < upper; i += step)
-    {
-        for (int64_t j = -99; j < 99; ++j)
-        {
-            check(i, j);
-        }
-    }
-    
-    const BigInt big1 = std::numeric_limits<int64_t>::max();
-    checkEqual(big1, "9223372036854775808");
-
-    const BigInt big2 = big1 + big1;
-    checkEqual(big2, "18446744073709551616");
-
-    const BigInt big3 = big2 - big1;
-    checkEqual(big3, "9223372036854775808");
-    
-    std::cout << "done\n";
-
+    EqualTest();
+    MaxTest();
+    StrTest();
+    PlusTest();
+    CompareTest();
+    UnoMinusTets();
+    MinusTest();
+    MoveTest();
+    CopyTest();
+    MullTest();
+    ClassTest();
+    InterestingTest();
+    std::cout << "Succes!\n";
     return 0;
 }
