@@ -25,7 +25,7 @@ void GetElTest() {
     tmp_m = m;
     assert(tmp_m==m);
     m *= 10;
-    assert(m[0][1] == 50);
+    assert(m[3][1] == 50);
     assert(tmp_m != m);
 }
 
@@ -58,6 +58,7 @@ void ShowTest() {
             m[i][j] = 8;
         }
     }
+    assert(m[8][6] == 8);
     std::cout<<m<<std::endl;
 }
 
@@ -112,6 +113,8 @@ void EqualTest()
     m3 = m1 + m;
     assert(m2 == m3);
     assert(m != m2);
+    m3 = m2 = m;
+    assert(m3 == m);
 }
 
 void OnexOneTest()

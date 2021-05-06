@@ -77,7 +77,7 @@ const size_t Matrix::getColumns() const
 	return rows;
 }
 
-void Matrix::operator=(Matrix A)
+Matrix Matrix::operator=(Matrix A)
 {
 	if (this->columns != A.columns || rows != A.rows)
 	{
@@ -93,6 +93,7 @@ void Matrix::operator=(Matrix A)
 			}
 		}
 	}
+	return *this;
 }
 
 Matrix Matrix::operator+(const Matrix& A) const
@@ -107,7 +108,7 @@ Matrix Matrix::operator+(const Matrix& A) const
     return tmp_m;
 }
 
-Matrix* Matrix:: operator*=(const  int32_t a)
+Matrix Matrix:: operator*=(const  int32_t a)
 {
 	for (size_t i = 0; i < columns; i++)
 	{
@@ -116,9 +117,7 @@ Matrix* Matrix:: operator*=(const  int32_t a)
 			this->matrix[i][j] *= a;
 		}
 	}
-	// так?
-	return this;
-	//return *this; //?
+	return *this;
 }
 
 bool Matrix::operator==(const Matrix A) const

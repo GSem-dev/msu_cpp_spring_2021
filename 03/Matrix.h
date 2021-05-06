@@ -25,10 +25,10 @@ class Matrix
 		Matrix(const Matrix& A);
 		const size_t getRows() const;
 		const size_t getColumns() const;
-		void operator=(Matrix A);
+		Matrix operator=(Matrix A);
 		//void operator=(Matrix& A);
 		Matrix operator+(const Matrix& A) const;
-		Matrix* operator*=(const  int32_t a);
+		Matrix operator*=(const  int32_t a);
 		bool operator==(const Matrix A) const;
 		bool operator!=(const Matrix A) const;
 		friend std::ostream& operator<< (std::ostream& out, const Matrix& point);		
