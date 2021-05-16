@@ -68,8 +68,10 @@ void BigInt()
     {
         const Error error = deserializer.load(z);
         assert(error == Error::NoError);
+        assert(false);
     } catch(const std::out_of_range &)
     {
+        assert(true);
     }
 }
 
@@ -198,8 +200,10 @@ void FewTest()
         Deserializer deserializer(in);
         const Error err = deserializer.load(c);
         assert(err == Error::NoError);
+        assert(false);
     } catch(const std::invalid_argument &)
     {
+        assert(true);
     }
 }
 
