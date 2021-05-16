@@ -10,10 +10,9 @@ test.o: test.cpp parser.o
 parser.o: parser.cpp parser.hpp
 	$(CC) $(FLAGS) parser.cpp -c
 test:
-	g++ -c parser.cpp
-	g++ -c test.cpp
-	ar rvs libparser.a parser.o
-	g++ -o testlib test.o -L. -lparser
+	$(CC) $(FLAGS) -c parser.cpp
+	$(CC) $(FLAGS) -c test.cpp
+	$(CC) $(FLAGS) -o testlib test.o -L. -lparser
 	./testlib
 clean: parser.cpp
 	rm -f *.o test testlib

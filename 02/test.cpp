@@ -103,11 +103,12 @@ void EqualTest()
     std::vector<unsigned long long> test_i {12, 441, 11};
     std::string s1;
     std::string s2;
-    for (int i = 0; i < array_int.size(); i++)
+    int stop_iter = array_int.size();
+    for (int i = 0; i < stop_iter; i++)
     {
         assert(array_int[i] == test_i[i]);
     }
-    for (int i = 0; i < array_str.size(); i++)
+    for (int i = 0; i < stop_iter; i++)
     {
         s1 = array_str[i];
         s2 = test_s[i];
