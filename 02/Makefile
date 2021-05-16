@@ -12,6 +12,7 @@ parser.o: parser.cpp parser.hpp
 test:
 	$(CC) $(FLAGS) -c parser.cpp
 	$(CC) $(FLAGS) -c test.cpp
+	ar rvs libparser.a parser.o
 	$(CC) $(FLAGS) -o testlib test.o -L. -lparser
 	./testlib
 clean: parser.cpp
