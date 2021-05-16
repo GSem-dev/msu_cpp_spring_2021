@@ -9,10 +9,10 @@ serializer: Serializer.o test.o
 Serializer.o: Serializer.cpp Serializer.h
 	$(CC) $(FLAGS) Serializer.cpp -c 
 
-test.o:
+test.o: test.cpp
 	$(CC) $(FLAGS) test.cpp -c
 	
-test: test.o Serializer.o
+test: test.o Serializer.o test.cpp
 	$(CC) $(FLAGS) Serializer.o test.o  -o test
 	./test
 

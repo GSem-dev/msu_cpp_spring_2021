@@ -48,12 +48,12 @@ Error Deserializer::pro(uint64_t& val)
 {
 	std::string letters;
 	in_ >> letters;
-	val = 0;
-	size_t l = letters.length();
+	val = std::stoull(letters,0 ,10);
+	/*size_t l = letters.length();
 	for (size_t i = 0; i < l; i++)
 	{
 		if (!isdigit(letters[i])) return Error::CorruptedArchive;
 		val += (letters[i] - '0') * pow(10, l - i - 1);
-	}	
+	}*/
 	return Error::NoError;
 }

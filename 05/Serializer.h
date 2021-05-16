@@ -1,6 +1,6 @@
 #pragma once
 
-#include<iostream>
+#include <iostream>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -8,7 +8,7 @@
 enum class Error
 {
     NoError,
-    CorruptedArchive
+    CorruptedArchive,
 };
 
 class Serializer
@@ -31,8 +31,8 @@ public:
         return process(args...);
     }
 
-    Error pro(bool value);
-    Error pro(uint64_t);
+    Error pro(bool val);
+    Error pro(uint64_t val);
 
 private:
     std::ostream& out_;
@@ -47,9 +47,7 @@ private:
     Error process(T&& val, Args&&... args)
     {
         if (pro(val) == Error::CorruptedArchive)
-        {
             return Error::CorruptedArchive;
-        }
         process(std::forward<Args>(args)...);
         return Error::NoError;
     }
@@ -88,9 +86,7 @@ private:
     Error process(T&& val, Args&&... args)
     {
         if (process(val) == Error::CorruptedArchive)
-        {
             return Error::CorruptedArchive;
-        }
         process(std::forward<Args>(args)...);
         return Error::NoError;
     }
