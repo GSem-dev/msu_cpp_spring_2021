@@ -64,15 +64,8 @@ void BigInt()
     stream << "18446744073709551619 "; // заполняем большим числом
     // max   = 18446744073709551615
     SingleUintData z{0};
-    try
-    {
-        const Error error = deserializer.load(z);
-        assert(error == Error::NoError);
-        assert(false);
-    } catch(const std::out_of_range &)
-    {
-        assert(true);
-    }
+    const Error error = deserializer.load(z);
+    assert(error == Error::CorruptedArchive);
 }
 
 void SingleBoolTets()
@@ -167,17 +160,18 @@ void MuchTest()
     Serializer serializer(stream);    
     const Error rerr = serializer.save(x);
     assert(rerr == Error::NoError);
-    assert(stream.str() == "1 ");   
+    assert(stream.str() == "1 ");
     //std::cout << stream.str() << std::endl;
-    stream << "false" << ' ' <<"false" << ' ';
+    stream.str("");
+    stream << "1 2 true true false ";
     //std::cout << stream.str() << std::endl;
-    
+    assert(stream.str() == "1 2 true true false ");    
     SingleUintData y{0};
     Deserializer deserializer(stream);
     const Error err = deserializer.load(y);
-    assert(err == Error::NoError);
+    assert(err == Error::CorruptedArchive);
     assert(x.a == y.a);
-    assert(stream.str() == "1 false false ");
+    assert(stream.str() == "1 2 true true false ");
 }
 
 void FewTest()
@@ -187,24 +181,14 @@ void FewTest()
     Serializer serializer(in);
     const Error rerr = serializer.save(d);
     assert(rerr == Error::NoError);  
-    std::string letters;
-    in >> letters;
-    in >> letters;
     in.str(""); // очищаем
     //std::cout << "1) in=" << in.str() << std::endl;
-    in << "2 true "; // заполняем
+    in << "3 "; // заполняем
     //std::cout << "2) in=" << in.str() << std::endl;
-    Data c{1, false, 0};
-    try
-    {
-        Deserializer deserializer(in);
-        const Error err = deserializer.load(c);
-        assert(err == Error::NoError);
-        assert(false);
-    } catch(const std::invalid_argument &)
-    {
-        assert(true);
-    }
+    Deserializer deserializer(in);
+    Data c{7, false, 7};
+    const Error lerr = deserializer.load(c);
+    assert(lerr == Error::CorruptedArchive);
 }
 
 int main() {

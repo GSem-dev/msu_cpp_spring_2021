@@ -48,7 +48,13 @@ Error Deserializer::pro(uint64_t& val)
 {
 	std::string letters;
 	in_ >> letters;
-	val = std::stoull(letters,0 ,10);
+	try
+	{
+	    val = std::stoull(letters, 0, 10);
+	} catch(...)
+	{
+	    return Error::CorruptedArchive;
+	}
 	/*size_t l = letters.length();
 	for (size_t i = 0; i < l; i++)
 	{

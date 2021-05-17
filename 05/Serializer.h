@@ -70,17 +70,27 @@ public:
     template <class... ArgsT>
     Error operator()(ArgsT&... args)
     {
-        return process(args...);
+        _n = sizeof...(args);
+        auto pro = process(args...);
+        if (_n!=0) return Error::CorruptedArchive; // недостаток
+        std::string l_tmp;
+        if (in_ >> l_tmp) return Error::CorruptedArchive; // избыток
+        
+        return pro;
     }
     Error pro(uint64_t& val);
     Error pro(bool& val);
 private:
     std::istream& in_;
     static constexpr char Separator = ' ';
+    size_t _n = 0;
     template <class T>
     Error process(T&& val)
     {
-        return pro(val);
+        _n --;
+        if (pro(val) == Error::CorruptedArchive)
+            return Error::CorruptedArchive;
+        return Error::NoError;
     }
     template <class T, class... Args>
     Error process(T&& val, Args&&... args)

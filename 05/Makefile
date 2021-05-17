@@ -12,7 +12,7 @@ Serializer.o: Serializer.cpp Serializer.h
 test.o: test.cpp
 	$(CC) $(FLAGS) test.cpp -c
 	
-test: test.o Serializer.o test.cpp
+test: test.o Serializer.o test.cpp Serializer.cpp Serializer.h
 	$(CC) $(FLAGS) Serializer.o test.o  -o test
 	./test
 
