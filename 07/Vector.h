@@ -152,13 +152,14 @@ public:
         ++finish;
     }
 
-    void emplace_back(const T& value)
+    template <typename... Args>
+    void emplace_back(Args&&... args)
     {
         if (size() >= size_)
         {
             reserve(size_ * 2 + 1);
         }
-        alloc.construct(finish, std::move(value));
+        alloc.construct(finish, std::forward<Args>(args)...);
         ++finish;
     }
 
@@ -217,7 +218,7 @@ public:
     {
         if (size_ < new_size) reserve(new_size);
         iterator prev = finish;
-        finish = start + new_size;
+        finish = start + new_size; 
         while (prev > finish)
         {
             --prev;
